@@ -49,7 +49,7 @@ def getLinks(articleUrl):
 #html= urlopen("http://www.billboard.com/charts/hot-100/2016-04-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-16")
-html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
+#html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
 getLinks(html)
 
 
