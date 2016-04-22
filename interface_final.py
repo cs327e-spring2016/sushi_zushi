@@ -105,6 +105,29 @@ if option == 3:
     amount_songs = len(comp_ids)
     print(artist_input + " has had " + str(amount_songs) + " song(s) in the top 100 this year.")
 
+if option == 4:
+    song_input = str(input("Enter a song's name "))
+    cur.execute("SELECT song_id FROM song WHERE song_name = %s", (song_input))
+    song_id_input = cur.fetchone()
+    if not song_id_input:
+        print(song_input + " hasn't been on the top 100 list this year.")
+        cur.close()
+        conn.close()
+        sys.exit()
+    song_id_input = song_id_input[0]
+    cur.execute("SELECT comp_id FROM artist_song WHERE song_id = %s", (song_id_input))
+    comp_id_input = cur.fetchone()
+    comp_id_input = comp_id_input[0]
+    cur.execute("SELECT MAX(rank) FROM top100 WHERE comp_id = %s", (comp_id_input))
+    worst_rank = cur.fetchone()[0]
+    cur.execute("SELECT MIN(rank)FROM top100 WHERE comp_id = %s", (comp_id_input))
+    best_rank = cur.fetchone()[0]
+    cur.execute("SELECT week_id FROM top100 WHERE (rank = %s) AND (comp_id = %s)", (best_rank,comp_id_input))
+    best_week = cur.fetchone()[0]
+    cur.execute("SELECT week_id FROM top100 WHERE (rank = %s) AND (comp_id = %s)", (worst_rank, comp_id_input))
+    worst_week = cur.fetchone()[0]
+    print("The song " + song_input + " had its worst week on Billboard 100 on week " + str(worst_week) + " with rank: " + str(worst_rank))
+    print("It had its best week on week " + str(best_week) + " with rank: " + str(best_rank))
 
 if option == 5:
     #First we need to create a table in which the artist name, the 
@@ -122,8 +145,48 @@ if option == 6:
     for i in song_week:
         print(i[0])
     print("These songs have been in the HOT100 Bibllboard Charts for 17 weeks in 2016")
-    
-    
+
+if option == 7:
+
+    artist_input = str(input("Enter an artist's name "))
+    cur.execute("SELECT artist_id FROM artist WHERE artist_name = %s" , (artist_input))
+    artist_id_input = cur.fetchone()
+    if not artist_id_input:
+        print(artist_input + " hasn't been on the HOT 100 list this year.")
+        cur.close()
+        conn.close()
+        sys.exit()
+
+    cur.execute("SELECT song_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id WHERE artist_id = %s", (artist_id_input))
+    print("The following songs by " + artist_input + " have been on the HOT 100 Billboard this year: ")
+    for i in cur.fetchall():
+        print(i[0])
+        
+if option == 8:
+
+    cur.execute("SELECT artist_id, COUNT(artist_id) count FROM artist_song INNER JOIN top100 ON artist_song.comp_id = top100.comp_id GROUP BY artist_id ORDER BY count DESC;")
+    print("Here are the hottest artists this year: ")
+    for i in cur.fetchall():
+        print(str(i[0]) + " has appeared " + str(i[1]) + " distinct times in the HOT 100 this year.")
+
+if option == 9:
+
+    rank_input = eval(input("Enter a rank: "))
+    week_input = eval(input("Enter a week: "))
+    while (rank_input > 100) or (rank_input < 0) or (week_input > 17) or (week_input <0):
+        print("Please enter valid rank and input.")
+        rank_input = eval(input("Enter a rank: "))
+        week_input = eval(input("Enter a week: "))
+
+    cur.execute("SELECT week_date FROM week WHERE week_id = %s", week_input)
+    week_name = cur.fetchone()[0]
+    cur.execute("SELECT comp_id FROM top100 WHERE (rank = %s) AND (week_id = %s)",(rank_input,week_input))
+    comp_id_input = cur.fetchone()[0]
+    cur.execute("SELECT artist_name, song_name FROM artist_song INNER JOIN song ON artist_song.song_id = song.song_id INNER JOIN artist ON artist_song.artist_id = artist.artist_id  WHERE comp_id = %s;", comp_id_input)
+    result = cur.fetchone()
+    song_name = result[1]
+    artist_name = result[0]
+    print("On the week of " + str(week_name) + ", the song with rank " + str(rank_input) + " was " + str(song_name) + " by " + str(artist_name))    
 
 
 
