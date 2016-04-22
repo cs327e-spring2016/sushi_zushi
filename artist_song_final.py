@@ -12,30 +12,20 @@ def store1(artist_name2,song_name2):
 	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
 	#t = (song_id2, song_name2)
 	#cur.execute("""INSERT INTO artist_song (name_artist,name_song) VALUES({1})""".format(json.dumps(artist_name2,song_name2)))
-	cur.execute("INSERT INTO artist_song (name_artist,name_song) VALUES (%s,%s)", (artist_name2, song_name2)) 
+	cur.execute("INSERT INTO artist_song (artist_id,song_id) VALUES ((SELECT artist_id FROM artist WHERE artist_name= %s ), (SELECT song_id FROM song WHERE song_name =%s ))",(artist_name2,song_name2))
 	cur.connection.commit()
 
-def store(song_name2):
-	cur.execute("""INSERT INTO artist_song (name_song) VALUES({0})""".format(json.dumps(song_name2)))
-	cur.connection.commit()
 
-def check_artist(name):
-	test = False
-	test1 = cur.execute("""SELECT * FROM artist_song WHERE name_artist = ({0})""".format(json.dumps(name)))
+
+def check(song,artist):
+
+	test1 = cur.execute("SELECT * FROM artist_song WHERE artist_id = (SELECT artist_id FROM artist WHERE artist_name = %s) AND  song_id = (SELECT song_id FROM song WHERE song_name = %s)",(song,artist))
+	#print(test1)
 	if test1 == 1:
 		return True
 	else:
 		return False
 
-def check_song():
-	test = False
-	test1 = cur.execute("""SELECT * FROM artist_song WHERE name_song = ({0})""".format(json.dumps(name)))
-	if test1 == 1:
-		return True
-	else:
-		return False
-def check():
-	test1=cur.execute("""SELECT * FROM artist_song WHERE name_song = ())
 
 def getLinks(articleUrl):
 	bsObj = BeautifulSoup(html)
@@ -51,20 +41,23 @@ def getLinks(articleUrl):
 		list1.append(name)
 	for name in nameList2:
 		name = name.get_text()
+		name=name.strip()
 		list2.append(name)
 
 	matrix = []
 	for i in range(len(list1)):
 		matrix.append([list1[i],list2[i]])
+
 	for i in matrix:
-		store1(i[0],i[1])
+		if check(i[0],i[1]) != True:
+			store1(i[0],i[1])
 	#print(matrix)
 
 
 	#print(songs)
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-09")
-html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")
+#html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-23")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-30")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-02-06")
@@ -78,7 +71,7 @@ html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")
 #html= urlopen("http://www.billboard.com/charts/hot-100/2016-04-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-16")
-#html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
+html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
 getLinks(html)
 
 
