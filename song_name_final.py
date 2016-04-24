@@ -1,3 +1,5 @@
+#Here we are connecting to mysql and importing the programs we need.
+
 from urllib.request import urlopen 
 from bs4 import BeautifulSoup 
 import pymysql
@@ -6,6 +8,7 @@ conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='ro
 cur = conn.cursor()
 #cur.execute("USE ")
 
+#Here we are adding the values into our tables
 
 def store(song_name2):
 
@@ -14,6 +17,7 @@ def store(song_name2):
 	cur.execute("""INSERT INTO song (song_name) VALUES({0})""".format(json.dumps(song_name2)))
 	cur.connection.commit()
 
+#Here we are checking for repeated values
 def check(name):
 	test = False
 	test1 = cur.execute("""SELECT * FROM song WHERE song_name = ({0})""".format(json.dumps(name)))
@@ -21,6 +25,8 @@ def check(name):
 		return True
 	else:
 		return False
+
+#Here we are doing our webscrapping
 
 def getLinks(articleUrl):
 	bsObj = BeautifulSoup(html)
@@ -33,6 +39,7 @@ def getLinks(articleUrl):
 		#songs.append(name)
 			store(name)
 	#print(songs)
+#Here are the different urls we need to gather our data.
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")

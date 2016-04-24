@@ -1,3 +1,4 @@
+#Connecting to my sql and importing the programs that we need.
 from urllib.request import urlopen 
 from bs4 import BeautifulSoup 
 import pymysql
@@ -6,7 +7,7 @@ conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='ro
 cur = conn.cursor()
 #cur.execute("USE ")
 
-
+#Here we are adding our values to our table
 def store1(artist_name2,song_name2):
 
 	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
@@ -15,7 +16,7 @@ def store1(artist_name2,song_name2):
 	cur.execute("INSERT INTO artist_song (artist_id,song_id) VALUES ((SELECT artist_id FROM artist WHERE artist_name= %s ), (SELECT song_id FROM song WHERE song_name =%s ))",(artist_name2,song_name2))
 	cur.connection.commit()
 
-
+#Here we are checking for repeated values
 
 def check(song,artist):
 
@@ -26,6 +27,7 @@ def check(song,artist):
 	else:
 		return False
 
+#Here we are doing the webscrapping and creating a 2-d list to pair up the song and artist name. 
 
 def getLinks(articleUrl):
 	bsObj = BeautifulSoup(html)

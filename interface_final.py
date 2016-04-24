@@ -1,4 +1,4 @@
-
+#Importing programs we need and connecting my sql
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import pymysql
@@ -8,6 +8,7 @@ import sys
 conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='', db='billboard')
 cur = conn.cursor()
 
+#Here is the homepage of our program
 print("Welcome to Billboard Top 100 Data Interface!")
 print("")
 print("Here are your options:")
@@ -26,7 +27,7 @@ option = eval(input("What would you like to know? "))
 print("")
 print("")
 
-
+#These are de different queries 
 if option == 1:
 
     artist_input = str(input("Enter an artist's name "))
