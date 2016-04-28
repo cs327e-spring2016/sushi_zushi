@@ -5,14 +5,10 @@ import pymysql
 import json
 conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='', db='billboard')
 cur = conn.cursor()
-#cur.execute("USE ")
+
 
 #Here we are adding our values to our table
 def store1(artist_name2,song_name2):
-
-	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
-	#t = (song_id2, song_name2)
-	#cur.execute("""INSERT INTO artist_song (name_artist,name_song) VALUES({1})""".format(json.dumps(artist_name2,song_name2)))
 	cur.execute("INSERT INTO artist_song (artist_id,song_id) VALUES ((SELECT artist_id FROM artist WHERE artist_name= %s ), (SELECT song_id FROM song WHERE song_name =%s ))",(artist_name2,song_name2))
 	cur.connection.commit()
 
@@ -38,8 +34,6 @@ def getLinks(articleUrl):
 	for name in nameList1:
 		name = name.get_text()
 		name= name.strip()
-		#if name not in songs:
-		#songs.append(name)
 		list1.append(name)
 	for name in nameList2:
 		name = name.get_text()
@@ -53,10 +47,8 @@ def getLinks(articleUrl):
 	for i in matrix:
 		if check(i[0],i[1]) != True:
 			store1(i[0],i[1])
-	#print(matrix)
+	
 
-
-	#print(songs)
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")

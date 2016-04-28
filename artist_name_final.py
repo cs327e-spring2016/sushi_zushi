@@ -12,8 +12,6 @@ cur = conn.cursor()
 #This is the code to import our values to our table in sql
 def store(artist_name2):
 
-	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
-	#t = (song_id2, song_name2)
 	cur.execute("""INSERT INTO artist (artist_name) VALUES({0})""".format(json.dumps(artist_name2)))
 	cur.connection.commit()
 
@@ -31,17 +29,14 @@ def check(name):
 def getLinks(articleUrl):
 	bsObj = BeautifulSoup(html)
 	nameList1 = bsObj.findAll("",{"class":"chart-row__artist"})
-	songs = []
 	for name in nameList1:
 		name = name.get_text()
 		name= name.strip()
 		if check(name) != True:
-		#if name not in songs:
-		#songs.append(name)
 			store(name)
-	#print(songs)
 
 #These are the different URL's for the different dates. 
+
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")
@@ -59,6 +54,7 @@ def getLinks(articleUrl):
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-16")
 html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
+
 #Here the function is called 
 getLinks(html)
 

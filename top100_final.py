@@ -6,14 +6,11 @@ import pymysql
 import json
 conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='', db='billboard')
 cur = conn.cursor()
-#cur.execute("USE ")
+
 
 #Here we are storing the values we fetched to mysql
 def store1(rank,artist_name2,song_name2):
 
-	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
-	#t = (song_id2, song_name2)
-	#cur.execute("""INSERT INTO artist_song (name_artist,name_song) VALUES({1})""".format(json.dumps(artist_name2,song_name2)))
 	cur.execute("INSERT INTO top100 (week_id, rank, comp_id) VALUES ((SELECT week_id FROM week WHERE week_id= 17 ), (%s), (SELECT comp_id FROM artist_song WHERE artist_id = (SELECT artist_id FROM artist WHERE artist_name = %s) AND song_id = (SELECT song_id FROM song WHERE song_name = %s)))",(rank,artist_name2,song_name2))
 	cur.connection.commit()
 #This function helps to order our table.
@@ -33,8 +30,6 @@ def getLinks(articleUrl):
 	for name in nameList1:
 		name = name.get_text()
 		name= name.strip()
-		#if name not in songs:
-		#songs.append(name)
 		list1.append(name)
 	for name in nameList2:
 		name = name.get_text()
@@ -52,10 +47,10 @@ def getLinks(articleUrl):
 
 	for i in matrix:
 			store1(i[0],i[1],i[2])
-	#print(matrix)
+	
 
 
-	#print(songs)
+	
 #Here are the different URL's we used four our dates.
 
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
@@ -76,7 +71,7 @@ def getLinks(articleUrl):
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-16")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-04-23")
 getLinks(html)
-#order()
+
 
 
 

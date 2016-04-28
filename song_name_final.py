@@ -6,14 +6,12 @@ import pymysql
 import json
 conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='', db='billboard')
 cur = conn.cursor()
-#cur.execute("USE ")
+
 
 #Here we are adding the values into our tables
 
 def store(song_name2):
 
-	#cur.execute("INSERT INTO song (song_amount, song_name) VALUES ((\"%s\",\"%s\")", (song_id, song_name)) 
-	#t = (song_id2, song_name2)
 	cur.execute("""INSERT INTO song (song_name) VALUES({0})""".format(json.dumps(song_name2)))
 	cur.connection.commit()
 
@@ -35,11 +33,11 @@ def getLinks(articleUrl):
 	for name in nameList1:
 		name = name.get_text()
 		if check(name) != True:
-		#if name not in songs:
-		#songs.append(name)
+		
 			store(name)
-	#print(songs)
+	
 #Here are the different urls we need to gather our data.
+
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-02")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-09")
 #html = urlopen("http://www.billboard.com/charts/hot-100/2016-01-16")
