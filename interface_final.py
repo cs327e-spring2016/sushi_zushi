@@ -5,7 +5,7 @@ import pymysql
 import json
 import sys
 
-conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='', db='billboard')
+conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock', user='root', passwd='perro', db='billboard')
 cur = conn.cursor()
 
 print("Welcome to Billboard Top 100 Data Interface!")
@@ -22,14 +22,19 @@ print("8. The list of Hottest artists this year")
 print("9. Find a song by consulting the given rank and week")
 print("10. Exit the interface")
 
+keys = []
+for i in range(1,11):
+    keys.append(str(i))
 
 def interact():
 
     option = input("What would you like to know? ")
-    option = int(option)
-    while (option > 10) or (option < 0):
-        print("Enter a valid option.")
+    while option not in keys:
+        print("Not a valid option!")
+        print("")
         option = input("What would you like to know? ")
+    option = int(option)
+
     print("")
     print("")
 
@@ -42,9 +47,7 @@ def interact():
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the top 100 list this year.")
-            cur.close()
-            conn.close()
-            sys.exit()
+            interact()
 
         artist_id_input = int(artist_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE artist_id = %s ", (artist_id_input))
@@ -72,9 +75,7 @@ def interact():
         song_id_input = cur.fetchone()
         if not song_id_input:
             print(song_input + " hasn't been on the top 100 list this year.")
-            cur.close()
-            conn.close()
-            sys.exit()
+            interact()
 
         song_id_input = int(song_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE song_id = %s ", (song_id_input))
@@ -104,9 +105,8 @@ def interact():
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the top 100 list this year.")
-            cur.close()
-            conn.close()
-            sys.exit()
+            interact()
+
         artist_id_input = int(artist_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE artist_id = %s ", (artist_id_input))
         comp_ids = cur.fetchall()
@@ -119,9 +119,8 @@ def interact():
         song_id_input = cur.fetchone()
         if not song_id_input:
             print(song_input + " hasn't been on the top 100 list this year.")
-            cur.close()
-            conn.close()
-            sys.exit()
+            interact()
+
         song_id_input = song_id_input[0]
         cur.execute("SELECT comp_id FROM artist_song WHERE song_id = %s", (song_id_input))
         comp_id_input = cur.fetchone()
@@ -161,9 +160,7 @@ def interact():
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the HOT 100 list this year.")
-            cur.close()
-            conn.close()
-            sys.exit()
+            interact()
 
         cur.execute("SELECT song_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id WHERE artist_id = %s", (artist_id_input))
         print("The following songs by " + artist_input + " have been on the HOT 100 Billboard this year: ")
