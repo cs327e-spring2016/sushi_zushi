@@ -26,6 +26,7 @@ keys = []
 for i in range(1,11):
     keys.append(str(i))
 
+
 def interact():
 
     option = input("What would you like to know? ")
@@ -41,13 +42,12 @@ def interact():
 
 
     if option == 1:
-
         artist_input = str(input("Enter an artist's name "))
         cur.execute("SELECT artist_id FROM artist WHERE artist_name = %s" , (artist_input))
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the top 100 list this year.")
-            interact()
+            return
 
         artist_id_input = int(artist_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE artist_id = %s ", (artist_id_input))
@@ -75,7 +75,7 @@ def interact():
         song_id_input = cur.fetchone()
         if not song_id_input:
             print(song_input + " hasn't been on the top 100 list this year.")
-            interact()
+            return
 
         song_id_input = int(song_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE song_id = %s ", (song_id_input))
@@ -105,7 +105,7 @@ def interact():
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the top 100 list this year.")
-            interact()
+            return
 
         artist_id_input = int(artist_id_input[0])
         cur.execute("SELECT comp_id FROM artist_song WHERE artist_id = %s ", (artist_id_input))
@@ -119,7 +119,7 @@ def interact():
         song_id_input = cur.fetchone()
         if not song_id_input:
             print(song_input + " hasn't been on the top 100 list this year.")
-            interact()
+            return
 
         song_id_input = song_id_input[0]
         cur.execute("SELECT comp_id FROM artist_song WHERE song_id = %s", (song_id_input))
@@ -160,7 +160,7 @@ def interact():
         artist_id_input = cur.fetchone()
         if not artist_id_input:
             print(artist_input + " hasn't been on the HOT 100 list this year.")
-            interact()
+            return
 
         cur.execute("SELECT song_name FROM song INNER JOIN artist_song ON song.song_id = artist_song.song_id WHERE artist_id = %s", (artist_id_input))
         print("The following songs by " + artist_input + " have been on the HOT 100 Billboard this year: ")
