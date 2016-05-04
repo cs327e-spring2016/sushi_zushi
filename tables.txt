@@ -1,0 +1,57 @@
+#artist Table
+
+CREATE TABLE artist (
+artist_id int NOT NULL AUTO_INCREMENT, 
+artist_name Varchar(255), 
+PRIMARY KEY (artist_id)
+);
+
+#song Table
+CREATE TABLE song (
+song_id int NOT NULL AUTO_INCREMENT, 
+song_name Varchar(255), 
+PRIMARY KEY (song_id) 
+);
+
+#artist_song Table 
+CREATE TABLE artist_song(
+comp_id int NOT NULL AUTO_INCREMENT,
+artist_id int,
+song_id int,
+PRIMARY KEY(comp_id),
+FOREIGN KEY(artist_id) REFERENCES artist(artist_id),
+FOREIGN KEY(song_id) REFERENCES song(song_id)
+);
+
+#top100 Table
+CREATE TABLE top100( 
+comp_id int, 
+week_id int, 
+rank varchar(250), 
+FOREIGN KEY(comp_id) REFERENCES artist_song(comp_id),
+FOREIGN KEY(week_id) REFERENCES week(week_id),
+CONSTRAINT pk_weekrank PRIMARY KEY(week_id,rank));
+
+#week Table
+CREATE TABLE week( week_id int NOT NULL AUTO_INCREMENT,
+week_date varchar(40),
+PRIMARY KEY (week_id) );
+
+#Hardcode week table
+INSERT INTO week VALUES(NULL,'January-02');
+INSERT INTO week VALUES(NULL,'January-09');
+INSERT INTO week VALUES(NULL,'January-16');
+INSERT INTO week VALUES(NULL,'January-23');
+INSERT INTO week VALUES(NULL,'January-30');
+INSERT INTO week VALUES(NULL,'February-06');
+INSERT INTO week VALUES(NULL,'February-13');
+INSERT INTO week VALUES(NULL,'February-20');
+INSERT INTO week VALUES(NULL,'February-27');
+INSERT INTO week VALUES(NULL,'March-05');
+INSERT INTO week VALUES(NULL,'March-12');
+INSERT INTO week VALUES(NULL,'March-19');
+INSERT INTO week VALUES(NULL,'March-26');
+INSERT INTO week VALUES(NULL,'April-02');
+INSERT INTO week VALUES(NULL,'April-09');
+INSERT INTO week VALUES(NULL,'April-16');
+INSERT INTO week VALUES(NULL,'April-23');
